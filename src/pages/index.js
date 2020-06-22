@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import axios from 'axios';
 
 import Layout from 'components/Layout';
 import Container from 'components/Container';
@@ -14,7 +15,6 @@ const CENTER = [LOCATION.lat, LOCATION.lng];
 const DEFAULT_ZOOM = 2;
 
 const IndexPage = () => {
-
   /**
    * mapEffect
    * @description Fires a callback once the page renders
@@ -22,7 +22,19 @@ const IndexPage = () => {
    */
 
   async function mapEffect({ leafletElement: map } = {}) {
+    let response;
 
+    try {
+      response = await axios.get( 'https://corona.lmao.ninja/v2/countries' );
+    } catch ( e ) {
+      console.log( `Failed to fetch countries: ${e.message}`, e );
+      return;
+    }
+
+    const { data = [] } = response;
+
+    console.log( map );
+    console.log( data );
   }
 
   const mapSettings = {
@@ -38,9 +50,7 @@ const IndexPage = () => {
         <title>Home Page</title>
       </Helmet>
 
-      <Map {...mapSettings}>
-        
-      </Map>
+      <Map {...mapSettings}></Map>
 
       <Container type="content" className="text-center home-start">
         <h2>Still Getting Started?</h2>
