@@ -1,6 +1,6 @@
 ## Coronavirus Map
 
-This is a Coronavirus map built with Leaflet Gatsby Starter template. The application features a world map with markers indicating the Coronavirus cases by county. 
+This is a Coronavirus map built with Leaflet Gatsby Starter template. The application features a world map with markers indicating the Coronavirus cases by country.  
 
 ## Images
 ![Application image](https://i.imgur.com/w6tcS5d.png)
@@ -23,4 +23,5 @@ This is a Coronavirus map built with Leaflet Gatsby Starter template. The applic
 ### Requirements
 * [Gatsby CLI](https://www.npmjs.com/package/gatsby-cli)
 * [Yarn](https://yarnpkg.com/en/)
+
 
