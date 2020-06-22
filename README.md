@@ -22,4 +22,4 @@ This is a Coronavirus map built with Leaflet Gatsby Starter template. The applic
 * [Yarn](https://yarnpkg.com/en/)
 
 ## Images
-https://imgur.com/w6tcS5d
+![Application image](https://imgur.com/w6tcS5d)
