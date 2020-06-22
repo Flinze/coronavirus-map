@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import L from 'leaflet';
 import axios from 'axios';
 
 import Layout from 'components/Layout';
@@ -32,9 +33,72 @@ const IndexPage = () => {
     }
 
     const { data = [] } = response;
+    const hasData = Array.isArray( data ) && data.length > 0;
 
-    console.log( map );
-    console.log( data );
+    if ( !hasData ) return;
+
+    const geoJson = {
+      type: 'FeatureCollection',
+      features: data.map(( country = {}) => {
+        const { countryInfo = {} } = country;
+        const { lat, long: lng } = countryInfo;
+        return {
+          type: 'Feature',
+          properties: {
+            ...country,
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [lng, lat],
+          },
+        };
+      }),
+    };
+
+    const geoJsonLayers = new L.GeoJSON( geoJson, {
+      pointToLayer: ( feature = {}, latlng ) => {
+        const { properties = {} } = feature;
+        let updatedFormatted;
+        let casesString;
+
+        const { country, updated, cases, deaths, recovered } = properties;
+
+        casesString = `${cases}`;
+
+        if ( cases > 1000 ) {
+          casesString = `${casesString.slice( 0, -3 )}k+`;
+        }
+
+        if ( updated ) {
+          updatedFormatted = new Date( updated ).toLocaleString();
+        }
+
+        const html = `
+          <span class="icon-marker">
+            <span class="icon-marker-tooltip">
+              <h2>${country}</h2>
+              <ul>
+                <li><strong>Confirmed:</strong> ${cases}</li>
+                <li><strong>Deaths:</strong> ${deaths}</li>
+                <li><strong>Recovered:</strong> ${recovered}</li>
+                <li><strong>Last Update:</strong> ${updatedFormatted}</li>
+              </ul>
+            </span>
+            ${casesString}
+          </span>
+        `;
+
+        return L.marker( latlng, {
+          icon: L.divIcon({
+            className: 'icon',
+            html,
+          }),
+          riseOnHover: true,
+        });
+      },
+    });
+
+    geoJsonLayers.addTo( map );
   }
 
   const mapSettings = {
